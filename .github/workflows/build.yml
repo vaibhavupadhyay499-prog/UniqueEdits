@@ -1,5 +1,4 @@
-name: Build Android APK
-
+  name: Build Android APK
 on:
   push:
     branches: [ "main" ]
@@ -19,17 +18,13 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Gradle Wrapper
+    - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: '8.2'
-        generate-job-summary: false
 
-    - name: Generate Wrapper and Build
-      run: |
-        gradle wrapper --gradle-version 8.2
-        chmod +x gradlew
-        ./gradlew assembleDebug --no-daemon --stacktrace
+    - name: Build Debug APK
+      run: gradle assembleDebug --no-daemon
 
     - name: Upload APK
       if: success()
@@ -37,4 +32,4 @@ jobs:
       with:
         name: UniqueEdits-APK
         path: app/build/outputs/apk/debug/*.apk
-        
+      
