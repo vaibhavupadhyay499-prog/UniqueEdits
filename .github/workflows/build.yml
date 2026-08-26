@@ -19,18 +19,20 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
-
-    - name: Setup Gradle
+    - name: Setup Gradle Wrapper
       uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: '8.2'
+        generate-job-summary: false
 
-    - name: Build Debug APK
-      run: gradle :app:assembleDebug
+    - name: Generate Wrapper and Build
+      run: |
+        gradle wrapper --gradle-version 8.2
+        chmod +x gradlew
+        ./gradlew assembleDebug --no-daemon --stacktrace
 
     - name: Upload APK
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: UniqueEdits-APK
